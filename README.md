@@ -1,19 +1,19 @@
-# Archit Biswas — Portfolio
+# Archit Biswas - Portfolio
 
-My personal portfolio site: full-stack + GenAI/LLM engineer, built as a scroll-driven, animation-heavy single page rather than a static template. Live copy, resume viewer, a working contact form backed by a real database, and a fair amount of canvas/GSAP work under the hood.
+My personal portfolio site: full-stack + GenAI/LLM engineer, built as a scroll-driven, animation-heavy single-page rather than a static template. Live copy, resume viewer, a working contact form backed by a real database, and a fair amount of canvas/GSAP work under the hood.
 
-**Live site:** https://architbiswas.dev *(update if the domain changes)*
+**Live site:** https://architbiswas.online
 
 ## What's actually on the page
 
 - **Hero** with a cursor-tracking spotlight and a full-viewport animated node graph running behind everything (canvas-based, connects nearby nodes with lines that light up near the pointer)
 - **About** as a pinned deck of cards that flip through on scroll (falls back to a normal stacked layout on phones and under reduced-motion)
-- **Journey** (work + education) as a horizontally pinned rail you scroll through vertically, panels zooming into focus as they pass center
+- **Journey** (work + education) as a horizontally pinned rail you scroll through vertically, panels zooming into focus as they pass centre
 - **Skills** as a sticky "I work with ___" line where categories scroll past and light up when centered, using native CSS scroll-driven animations (`animation-timeline: view()`) where supported, with a GSAP ScrollTrigger fallback
 - **Projects** as a horizontal explorer with scroll-zoom cards
 - **Certifications** as a pinned "circular split roll", titles and badges travel around two separate circular paths, both scrubbed by one ScrollTrigger
 - **Resume viewer** with a cursor-following thumbnail preview and a direct PDF download
-- **Contact form** that actually sends, validated with Zod, submitted through a TanStack Start server function, written to Postgres via Supabase, with an honeypot field against basic bots
+- **Contact form** that actually sends, validated with Zod, submitted through a TanStack Start server function, written to Postgres via Supabase.
 - Dark/light theme toggle, kinetic full-screen nav overlay (GSAP), animated contact banner marquee, custom cursor glow, and skip-to-content link for accessibility
 
 Almost none of this is decorative for its own sake. Motion is gated behind `prefers-reduced-motion` and screen width checks throughout, so it degrades to plain, readable content rather than breaking on phones or for people who've turned off animation.
@@ -30,7 +30,7 @@ Almost none of this is decorative for its own sake. Motion is gated behind `pref
 - Lenis for smooth scrolling
 - Lucide for icons
 
-**Backend / data**
+**Backend/data**
 - Supabase (Postgres + auth) for the contact form's storage
 - TanStack Start server functions for the form submission path, with a dedicated service-role client for server-side writes and a separate RLS-scoped client for anything user-authenticated
 - Zod for request validation
@@ -62,13 +62,13 @@ src/
 │   │   ├── SiteHeader.tsx         Sticky header + section-aware nav state
 │   │   ├── SkillsScroll.tsx       Scroll-timeline skills focus list
 │   │   └── ThemeToggle.tsx        Light/dark switch
-│   └── ui/                  shadcn/ui component library (buttons, dialogs, forms, etc.)
+│   └── ui/                  shadcn/ui component library (buttons, dialogues, forms, etc.)
 ├── data/
 │   └── portfolio.ts         All site content: bio, journey, skills, projects, certs
 ├── hooks/
 │   ├── use-horizontal-pin.ts  Generic GSAP pin + horizontal scroll hook
 │   ├── use-parallax.ts        Vertical parallax on scroll
-│   ├── use-scroll-zoom.ts     Scale/opacity scrub toward viewport center
+│   ├── use-scroll-zoom.ts     Scale/opacity scrub toward viewport centre
 │   ├── use-mobile.tsx         Breakpoint detection
 │   └── use-theme.tsx          Theme state + localStorage persistence
 ├── integrations/supabase/   Client setup, auth middleware, generated DB types
@@ -80,7 +80,7 @@ src/
 │   └── utils.ts               cn() helper, etc.
 ├── routes/                  TanStack Router file-based routes
 ├── router.tsx               Router + QueryClient setup
-├── server.ts                SSR entry with error normalization
+├── server.ts                SSR entry with error normalisation
 ├── start.ts                 Middleware registration (CSRF, auth, error handling)
 └── styles.css                Tailwind config, CSS custom properties, view-timeline keyframes
 
@@ -91,7 +91,7 @@ supabase/
 
 ## Content is data, not markup
 
-Everything you'd normally hunt through JSX to edit, name, bio, work history, skills, project list, certifications, resume metadata, lives in one file: `src/data/portfolio.ts`. Updating the site's copy means editing that file, not touching component code.
+Everything you'd normally hunt through JSX to edit- name, bio, work history, skills, project list, certifications, resume metadata- lives in one file: `src/data/portfolio.ts`. Updating the site's copy means editing that file, not touching component code.
 
 ## Running it locally
 
@@ -129,7 +129,7 @@ SUPABASE_URL=
 SUPABASE_SERVICE_ROLE_KEY=
 ```
 
-Without these set, the app still runs and renders, the contact form will just fail to submit, and the server client throws a clear error naming exactly which variable is missing.
+Without these set, the app still runs and renders; the contact form will just fail to submit, and the server client throws a clear error naming exactly which variable is missing.
 
 ### Database
 
