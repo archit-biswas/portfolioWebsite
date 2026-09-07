@@ -1,4 +1,4 @@
-# Archit Biswas — Portfolio
+# Archit Biswas - Portfolio
 
 My personal portfolio site: full-stack + GenAI/LLM engineer, built as a scroll-driven, animation-heavy single-page rather than a static template. Live copy, resume viewer, a working contact form backed by a real database, and a fair amount of canvas/GSAP work under the hood.
 
