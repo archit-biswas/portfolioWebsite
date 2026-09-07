@@ -84,18 +84,12 @@ export function Hero() {
 
       <div className="relative z-10 flex min-h-[100svh] w-full flex-col items-center justify-center px-8 py-24 text-center sm:py-28">
         {/* giant name */}
-        <h1 className="font-display uppercase leading-[0.85] tracking-tight text-foreground">
+        <h1 className="font-script leading-[0.95] tracking-tight text-foreground">
           <span
             style={{ animationDelay: "0.15s" }}
-            className="animate-hero-rise block bg-gradient-to-r from-foreground via-violet to-ember bg-clip-text text-[clamp(3.4rem,13vw,12rem)] font-bold text-transparent"
+            className="animate-hero-rise block bg-gradient-to-r from-foreground via-violet to-ember bg-clip-text text-[clamp(3.12rem,10.4vw,9.1rem)] text-transparent"
           >
-            {firstName}
-          </span>
-          <span
-            style={{ animationDelay: "0.27s" }}
-            className="animate-hero-rise block bg-gradient-to-r from-foreground via-violet to-ember bg-clip-text text-[clamp(3.4rem,13vw,12rem)] font-bold text-transparent"
-          >
-            {lastName}
+            {firstName} {lastName}
           </span>
         </h1>
 
