@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Award, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { portfolio } from "@/data/portfolio";
 import { accentVars } from "@/lib/accents";
 
@@ -9,17 +9,18 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-/** Off-focus presentation for both rings. Off-focus items are fully hidden. */
+/** Off-focus presentation for both rows. Off-focus items are fully hidden. */
 const SIDE_SCALE = 0.68;
 /** Fraction of one step over which an item fades in/out around focus. */
 const FADE_SPAN = 0.75;
 
 /**
- * Certifications as a pinned "circular split roll": titles travel around one
- * circular path while accent badge panels travel around a second one, both
- * driven by a single scrubbed ScrollTrigger. Motion is horizontal — items
- * sweep in from the right and out to the left, matching the Journey rail —
- * and only the item at the focus point is visible at all.
+ * Certifications as a pinned horizontal roll: each screenshot sits directly
+ * above its title and both share the same horizontal path, so they stay
+ * centred on each other the whole way through. Both rows are driven by a
+ * single scrubbed ScrollTrigger. Items sweep in from the right and out to
+ * the left, matching the Journey rail, and only the item at the focus point
+ * is visible at all.
  *
  * Phones and prefers-reduced-motion get a centred stacked list instead.
  */
@@ -30,9 +31,9 @@ export function CertificationsOrbit() {
   const titleRefs = useRef<(HTMLLIElement | null)[]>([]);
   const badgeRefs = useRef<(HTMLLIElement | null)[]>([]);
   const [active, setActive] = useState(0);
-  const [dims, setDims] = useState({ outer: 520, inner: 300, card: 150 });
+  const [dims, setDims] = useState({ outer: 520, card: 300 });
 
-  // Size both rings from the actual viewport width.
+  // Size the path and the screenshot width from the actual viewport width.
   useLayoutEffect(() => {
     const measure = () => {
       const w = stageRef.current?.offsetWidth ?? window.innerWidth;
@@ -40,8 +41,9 @@ export function CertificationsOrbit() {
       const outer = Math.min(w * 0.46, 620);
       setDims({
         outer,
-        inner: outer * 0.62,
-        card: Math.max(120, Math.min(w * 0.12, 176)),
+        // Max screenshot width. Height follows the image's own aspect ratio
+        // and is separately capped in the render so tall images still fit.
+        card: Math.max(220, Math.min(w * 0.22, 340)),
       });
     };
     measure();
@@ -82,8 +84,9 @@ export function CertificationsOrbit() {
               });
             });
           };
+          // Same radius for both rows keeps each image centred over its title.
           apply(titleRefs.current, dims.outer);
-          apply(badgeRefs.current, dims.inner);
+          apply(badgeRefs.current, dims.outer);
         };
 
         place();
@@ -120,21 +123,21 @@ export function CertificationsOrbit() {
     });
 
     return () => mm.revert();
-  }, [items.length, dims.outer, dims.inner]);
+  }, [items.length, dims.outer]);
 
   const activeItem = items[active]!;
   const activeAccent = accentVars[active % accentVars.length]!;
 
   return (
     <div ref={containerRef} className="relative w-full">
-      {/* Circular split roll (desktop), full-bleed and exactly one viewport tall */}
+      {/* Horizontal roll (desktop), full-bleed and exactly one viewport tall */}
       <div
         ref={stageRef}
         aria-hidden="true"
         className="relative left-1/2 hidden h-screen w-screen -translate-x-1/2 overflow-hidden md:block"
       >
-        {/* upper path: accent badge panels */}
-        <ul className="pointer-events-none absolute left-1/2 top-[34%] h-0 w-0">
+        {/* upper row: screenshot panels, centred above the titles */}
+        <ul className="pointer-events-none absolute left-1/2 top-[30%] h-0 w-0">
           {items.map((c, i) => {
             const accent = accentVars[i % accentVars.length]!;
             return (
@@ -143,29 +146,34 @@ export function CertificationsOrbit() {
                 ref={(el) => {
                   badgeRefs.current[i] = el;
                 }}
-                className="absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-2xl border text-center"
+                className="absolute w-max -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-2xl border p-1.5 shadow-lg"
                 style={{
-                  width: dims.card,
-                  height: dims.card,
                   background: `color-mix(in oklab, var(${accent}) 12%, var(--card))`,
-                  borderColor: `color-mix(in oklab, var(${accent}) 32%, transparent)`,
+                  borderColor: `color-mix(in oklab, var(${accent}) 40%, transparent)`,
                 }}
               >
-                <Award className="size-9" style={{ color: `var(${accent})` }} />
+                {c.image && (
+                  <img
+                    src={c.image}
+                    alt={c.name}
+                    className="block h-auto w-auto rounded-xl"
+                    style={{ maxWidth: dims.card, maxHeight: "38vh" }}
+                  />
+                )}
               </li>
             );
           })}
         </ul>
 
-        {/* lower path: certification titles */}
-        <ul className="pointer-events-none absolute left-1/2 top-[58%] h-0 w-0">
+        {/* lower row: certification titles */}
+        <ul className="pointer-events-none absolute left-1/2 top-[57%] h-0 w-0">
           {items.map((c, i) => (
             <li
               key={`title-${c.name}`}
               ref={(el) => {
                 titleRefs.current[i] = el;
               }}
-              className="absolute w-[min(28rem,60vw)] -translate-x-1/2 -translate-y-1/2 text-center"
+              className="absolute w-[min(42rem,78vw)] -translate-x-1/2 -translate-y-1/2 text-center"
             >
               <span
                 className="font-display text-2xl font-semibold leading-tight lg:text-3xl"
@@ -177,21 +185,26 @@ export function CertificationsOrbit() {
           ))}
         </ul>
 
-        {/* focused details, centred beneath the rings */}
-        <div className="absolute inset-x-0 bottom-[12%] flex justify-center px-6">
-          <div key={activeItem.name} className="animate-fade-in text-center">
-            <p className="text-sm font-medium text-muted-foreground">
+        {/* focused details, centred beneath the titles */}
+        <div className="absolute inset-x-0 bottom-[8%] flex justify-center px-4">
+          <div key={activeItem.name} className="animate-fade-in w-full max-w-2xl text-center">
+            <p className="text-base font-medium text-muted-foreground">
               {activeItem.issuer} ·{" "}
-              <span className="font-mono text-[0.8125rem]">{activeItem.date}</span>
+              <span className="font-mono text-[0.9375rem]">{activeItem.date}</span>
             </p>
+            {activeItem.description && (
+              <p className="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground/80">
+                {activeItem.description}
+              </p>
+            )}
             <a
               href={activeItem.credentialUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="pointer-events-auto mt-3 inline-flex items-center gap-1.5 text-sm font-medium underline-offset-4 hover:underline"
+              className="pointer-events-auto mt-4 inline-flex items-center gap-2 text-base font-medium underline-offset-4 hover:underline"
               style={{ color: `var(${activeAccent})` }}
             >
-              Verify credential <ExternalLink aria-hidden="true" className="size-4" />
+              Verify credential <ExternalLink aria-hidden="true" className="size-[1.125rem]" />
             </a>
           </div>
         </div>
@@ -199,35 +212,53 @@ export function CertificationsOrbit() {
 
       {/* Screen-reader summary for the animated desktop view. */}
       <p className="sr-only hidden md:block">
-        {items.map((c) => `${c.name} — ${c.issuer}, ${c.date}.`).join(" ")}
+        {items.map((c) => `${c.name}, ${c.issuer}, ${c.date}.`).join(" ")}
       </p>
 
-      {/* Mobile and reduced motion: centred stacked list */}
-      <ul className="grid gap-4 px-8 md:hidden">
-        {items.map((c, i) => (
-          <li
-            key={c.name + c.date}
-            className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-card p-6 text-center"
-          >
-            <Award
-              aria-hidden="true"
-              className="size-7"
-              style={{ color: `var(${accentVars[i % accentVars.length]})` }}
-            />
-            <h3 className="font-display text-lg font-semibold text-foreground">{c.name}</h3>
-            <p className="text-sm font-medium text-muted-foreground">
-              {c.issuer} · <span className="font-mono text-[0.8125rem]">{c.date}</span>
-            </p>
-            <a
-              href={c.credentialUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-primary underline-offset-4 hover:underline"
+      {/* Mobile and reduced motion: centred stacked list, image above the name */}
+      <ul className="grid gap-5 px-4 md:hidden">
+        {items.map((c, i) => {
+          const accent = accentVars[i % accentVars.length]!;
+          return (
+            <li
+              key={c.name + c.date}
+              className="flex flex-col items-center gap-3 rounded-2xl border border-border bg-card px-6 py-6 text-center"
             >
-              Verify credential <ExternalLink aria-hidden="true" className="size-4" />
-            </a>
-          </li>
-        ))}
+              {c.image && (
+                <div
+                  className="w-fit max-w-full overflow-hidden rounded-xl border p-1.5 shadow-md"
+                  style={{
+                    background: `color-mix(in oklab, var(${accent}) 12%, var(--card))`,
+                    borderColor: `color-mix(in oklab, var(${accent}) 40%, transparent)`,
+                  }}
+                >
+                  <img
+                    src={c.image}
+                    alt={c.name}
+                    className="block h-auto max-h-[22rem] w-auto max-w-full rounded-lg"
+                  />
+                </div>
+              )}
+              <h3 className="mt-1 font-display text-xl font-semibold text-foreground">{c.name}</h3>
+              <p className="text-base font-medium text-muted-foreground">
+                {c.issuer} · <span className="font-mono text-[0.9375rem]">{c.date}</span>
+              </p>
+              {c.description && (
+                <p className="mt-1.5 text-base leading-relaxed text-muted-foreground/80">
+                  {c.description}
+                </p>
+              )}
+              <a
+                href={c.credentialUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-1 inline-flex items-center gap-2 text-base font-medium text-primary underline-offset-4 hover:underline"
+              >
+                Verify credential <ExternalLink aria-hidden="true" className="size-[1.125rem]" />
+              </a>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

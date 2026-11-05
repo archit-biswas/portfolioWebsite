@@ -131,6 +131,18 @@ SUPABASE_SERVICE_ROLE_KEY=
 
 Without these set, the app still runs and renders; the contact form will just fail to submit, and the server client throws a clear error naming exactly which variable is missing.
 
+### Contact email delivery
+
+The contact form stores submissions in Supabase and sends an email through [Resend](https://resend.com). Create a Resend API key, verify the domain used in `CONTACT_EMAIL_FROM`, and configure these server-only variables in the hosting provider:
+
+```
+RESEND_API_KEY=
+CONTACT_EMAIL_TO=your-inbox@example.com
+CONTACT_EMAIL_FROM=Portfolio contact <contact@your-verified-domain.com>
+```
+
+`CONTACT_EMAIL_TO` is the inbox that receives notifications. The visitor's email is sent as `Reply-To`, so replying to the notification replies directly to them. Never use a `VITE_` prefix for these variables.
+
 ### Database
 
 The `contact_messages` table (id, name, email, subject, message, created_at) is defined in `supabase/migrations/`. Row Level Security is enabled with an insert-only policy for anonymous and authenticated users, so form submissions can be written but never read back through the public API. Apply the migration through the Supabase CLI or dashboard against your own project.
