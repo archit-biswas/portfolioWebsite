@@ -46,9 +46,7 @@ export const sendContactMessage = createServerFn({ method: "POST" })
         from: contactEmailFrom,
         to: [contactEmailTo],
         reply_to: data.email,
-        subject: data.subject
-          ? `Portfolio contact: ${data.subject}`
-          : `Portfolio contact from ${data.name}`,
+        subject: data.subject || `Message from ${data.name}`,
         text: [
           `Name: ${data.name}`,
           `Email: ${data.email}`,
