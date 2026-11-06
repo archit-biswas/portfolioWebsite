@@ -137,7 +137,7 @@ export function CertificationsOrbit() {
         className="relative left-1/2 hidden h-screen w-screen -translate-x-1/2 overflow-hidden md:block"
       >
         {/* upper row: screenshot panels, centred above the titles */}
-        <ul className="pointer-events-none absolute left-1/2 top-[30%] h-0 w-0">
+        <ul className="pointer-events-none absolute left-1/2 top-[24%] h-0 w-0">
           {items.map((c, i) => {
             const accent = accentVars[i % accentVars.length]!;
             return (
@@ -155,7 +155,7 @@ export function CertificationsOrbit() {
                 {c.image && (
                   <div
                     className="flex items-center justify-center overflow-hidden rounded-xl"
-                    style={{ width: dims.card, aspectRatio: "1.42" }}
+                    style={{ width: `min(${dims.card}px, 36vh)`, aspectRatio: "1.42" }}
                   >
                     <img
                       src={c.image}
@@ -170,7 +170,7 @@ export function CertificationsOrbit() {
         </ul>
 
         {/* lower row: certification titles */}
-        <ul className="pointer-events-none absolute left-1/2 top-[57%] h-0 w-0">
+        <ul className="pointer-events-none absolute left-1/2 top-[62%] h-0 w-0">
           {items.map((c, i) => (
             <li
               key={`title-${c.name}`}

@@ -115,21 +115,21 @@ bun run preview
 
 ### Environment variables
 
-The contact form needs a Supabase project to write to. Set these (client-exposed, `VITE_`-prefixed for the browser client):
-
-```
-VITE_SUPABASE_URL=
-VITE_SUPABASE_PUBLISHABLE_KEY=
-```
-
-And these for the server-side admin client (used only in server functions, never shipped to the browser):
+The contact form needs a Supabase project to write to. The server-side contact handler uses the admin client, so set these in the hosting provider:
 
 ```
 SUPABASE_URL=
 SUPABASE_SERVICE_ROLE_KEY=
 ```
 
-Without these set, the app still runs and renders; the contact form will just fail to submit, and the server client throws a clear error naming exactly which variable is missing.
+If other browser-side Supabase features are added later, also set these client-exposed variables:
+
+```
+VITE_SUPABASE_URL=
+VITE_SUPABASE_PUBLISHABLE_KEY=
+```
+
+The `SUPABASE_SERVICE_ROLE_KEY` must never be exposed with a `VITE_` prefix. Without the server variables, the app still renders but the contact form cannot submit.
 
 ### Contact email delivery
 
