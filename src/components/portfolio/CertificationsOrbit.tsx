@@ -153,12 +153,16 @@ export function CertificationsOrbit() {
                 }}
               >
                 {c.image && (
-                  <img
-                    src={c.image}
-                    alt={c.name}
-                    className="block h-auto w-auto rounded-xl"
-                    style={{ maxWidth: dims.card, maxHeight: "38vh" }}
-                  />
+                  <div
+                    className="flex items-center justify-center overflow-hidden rounded-xl"
+                    style={{ width: dims.card, aspectRatio: "1.42" }}
+                  >
+                    <img
+                      src={c.image}
+                      alt={c.name}
+                      className="block max-h-full max-w-full rounded-xl object-contain"
+                    />
+                  </div>
                 )}
               </li>
             );
@@ -226,7 +230,7 @@ export function CertificationsOrbit() {
             >
               {c.image && (
                 <div
-                  className="w-fit max-w-full overflow-hidden rounded-xl border p-1.5 shadow-md"
+                  className="flex aspect-[1.42] w-full max-w-[34rem] items-center justify-center overflow-hidden rounded-xl border p-1.5 shadow-md"
                   style={{
                     background: `color-mix(in oklab, var(${accent}) 12%, var(--card))`,
                     borderColor: `color-mix(in oklab, var(${accent}) 40%, transparent)`,
@@ -235,7 +239,7 @@ export function CertificationsOrbit() {
                   <img
                     src={c.image}
                     alt={c.name}
-                    className="block h-auto max-h-[22rem] w-auto max-w-full rounded-lg"
+                    className="block max-h-full max-w-full rounded-lg object-contain"
                   />
                 </div>
               )}
