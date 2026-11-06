@@ -33,7 +33,7 @@ export const portfolio = {
     name: "Archit Biswas",
     title: "Software Engineer - Full-Stack Developer & AI/ML Engineer",
     location: "Mumbai, India",
-    email: "architbiswas885@yahoo.com",
+    email: "hello@architbiswas.online",
     phone: "+91-91520-19510",
     pitch:
       "Full-Stack Software Engineer & Generative AI (GenAI) / Large Language Model (LLM) Developer based in Mumbai, India",
